@@ -104,7 +104,38 @@ def step_impl(context, element_name):
 # to get the element id of any button
 ##################################################################
 
-## UPDATE CODE HERE ##
+@when(u'I press the "{button_name}" button')
+def step_impl(context, button_name):
+    """ Press a button by name """
+    button_id = button_name.lower() + '-btn'
+    button = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.element_to_be_clickable((By.ID, button_id))
+    )
+    button.click()
+
+@then(u'I should see the message "{message}"')
+def step_impl(context, message):
+    """ Check for a flash message """
+    flash_message = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.visibility_of_element_located((By.ID, 'flash_message'))
+    )
+    assert message in flash_message.text
+
+@then(u'I should see "{product_name}" in the results')
+def step_impl(context, product_name):
+    """ Check for product name in the search results table """
+    search_results = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.visibility_of_element_located((By.ID, 'search_results'))
+    )
+    assert product_name in search_results.text
+
+@then(u'I should not see "{product_name}" in the results')
+def step_impl(context, product_name):
+    """ Ensure that product name is not in the search results table """
+    search_results = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.visibility_of_element_located((By.ID, 'search_results'))
+    )
+    assert product_name not in search_results.text
 
 ##################################################################
 # This code works because of the following naming convention:
